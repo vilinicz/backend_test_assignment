@@ -1,0 +1,85 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/users/{user_id}/cars":
+    get:
+      summary: Retrieves a list of cars for a user
+      tags:
+      - Cars
+      parameters:
+      - name: user_id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: integer
+      - name: query
+        in: query
+        required: false
+        description: Car brand name or part of car brand name
+        schema:
+          type: string
+      - name: price_min
+        in: query
+        required: false
+        description: Minimum car price
+        schema:
+          type: number
+      - name: price_max
+        in: query
+        required: false
+        description: Maximum car price
+        schema:
+          type: number
+      responses:
+        '200':
+          description: cars found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        brand:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                        model:
+                          type: string
+                        price:
+                          type: number
+                        rank_score:
+                          type: number
+                          nullable: true
+                        label:
+                          type: string
+                          nullable: true
+                          enum:
+                          - perfect_match
+                          - good_match
+                      required:
+                      - id
+                      - model
+                      - price
+                      - brand
+                      - rank_score
+                      - label
+        '404':
+          description: user not found
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: 0.0.0.0:3000
